@@ -56,7 +56,7 @@ namespace calculator
         private void CalculatorView_KeyPress(object sender, KeyPressEventArgs e)
         {
             var btn = Controls.OfType<Button>()
-                .Where(b => b.Text == SanitizeKey(e.KeyChar.ToString()))
+                .Where(b => b.ASCIIText == SanitizeKey(e.KeyChar.ToString()))
                 .FirstOrDefault();
             if (btn != null)
             {

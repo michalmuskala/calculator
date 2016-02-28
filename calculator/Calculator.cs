@@ -77,7 +77,8 @@ namespace calculator
             {
                 if (operations.Any())
                 {
-                    return operations.Last().Value.ToString();
+                    var provider = System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.NumberFormat;
+                    return operations.Last().Value.ToString(provider);
                 }
                 else
                 {

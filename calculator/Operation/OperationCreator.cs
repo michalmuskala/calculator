@@ -27,9 +27,9 @@ namespace calculator.Operation
 
             operations = new Dictionary<string, BuildOperation>();
             operations.Add("+", (lhs, rhs) => new Addition(lhs, rhs));
-            operations.Add("-", (lhs, rhs) => new Subtraction(lhs, rhs));
-            operations.Add("*", (lhs, rhs) => new Multiplication(lhs, rhs));
-            operations.Add("/", (lhs, rhs) => new Division(lhs, rhs));
+            operations.Add("−", (lhs, rhs) => new Subtraction(lhs, rhs));
+            operations.Add("×", (lhs, rhs) => new Multiplication(lhs, rhs));
+            operations.Add("÷", (lhs, rhs) => new Division(lhs, rhs));
         }
 
         public void Append(string s)
@@ -69,16 +69,22 @@ namespace calculator.Operation
                 throw new ArgumentException($"unknown operation: {Operation}");
             }
 
-            try
+            double dlhs, drhs;
+            if (TryParse(lhs, out dlhs) && TryParse(rhs, out drhs))
             {
-                var dlhs = double.Parse(lhs);
-                var drhs = double.Parse(rhs);
                 return builder(dlhs, drhs);
             }
-            catch (FormatException e)
+            else
             {
-                throw new ArgumentException($"invalid number: {e.Message}", e);
+                throw new ArgumentException($"invalid number");
             }
+        }
+
+        private bool TryParse(string s, out double res)
+        {
+            var format = System.Globalization.NumberStyles.Float;
+            var provider = System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.NumberFormat;
+            return double.TryParse(s, format, provider, out res);
         }
 
         public override string ToString() => $"{lhs} {Operation} {rhs}";

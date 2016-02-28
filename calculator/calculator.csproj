@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Button.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Calculator.cs" />
     <Compile Include="CalculatorController.cs" />
     <Compile Include="CalculatorView.cs">
