@@ -8,6 +8,8 @@ namespace calculator.Operation
 {
     interface IOperation
     {
-        double Value();
+        double Value { get; }
+        double Lhs { get; set; }
+        double Rhs { get; set; }
     }
 }

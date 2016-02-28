@@ -8,15 +8,14 @@ namespace calculator.Operation
 {
     class Division : IOperation
     {
-        private double lhs;
-        private double rhs;
+        public double Lhs { get; set; }
+        public double Rhs { get; set; }
+        public double Value => Lhs / Rhs;
 
         public Division(double lhs, double rhs)
         {
-            this.lhs = lhs;
-            this.rhs = rhs;
+            Lhs = lhs;
+            Rhs = rhs;
         }
-
-        public double Value() => lhs / rhs;
     }
 }

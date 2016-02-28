@@ -11,7 +11,10 @@ namespace calculator.Operation
         private string lhs;
         private string rhs;
 
-        public string Operation { get; set; }
+        public string Operation { private get; set; }
+        public bool HasLhs => !string.IsNullOrEmpty(lhs);
+        public bool HasContent => !string.IsNullOrWhiteSpace(ToString());
+        public bool IsValid => !new [] { Operation, lhs, rhs }.Any(string.IsNullOrEmpty);
 
         private delegate IOperation BuildOperation(double lhs, double rhs);
         private Dictionary<string, BuildOperation> operations;
@@ -22,6 +25,7 @@ namespace calculator.Operation
             rhs = "";
             Operation = "";
 
+            operations = new Dictionary<string, BuildOperation>();
             operations.Add("+", (lhs, rhs) => new Addition(lhs, rhs));
             operations.Add("-", (lhs, rhs) => new Subtraction(lhs, rhs));
             operations.Add("*", (lhs, rhs) => new Multiplication(lhs, rhs));
@@ -32,26 +36,43 @@ namespace calculator.Operation
         {
             if(String.IsNullOrEmpty(Operation))
             {
-                lhs += s;
+                lhs = Append(lhs, s);
             }
             else
             {
-                rhs += s;
+                rhs = Append(rhs, s);
+            }
+        }
+
+        private string Append(string original, string s)
+        {
+            if (s == "." && original.Contains("."))
+            {
+                return original;
+            }
+            else
+            {
+                return original + s;
             }
         }
 
         public IOperation Create()
         {
-            BuildOperation builder = operations[Operation];
-            if (builder == null)
+            if (String.IsNullOrEmpty(Operation))
+            {
+                throw new ArgumentException("no operation selected");
+            }
+
+            BuildOperation builder;
+            if (!operations.TryGetValue(Operation, out builder))
             {
                 throw new ArgumentException($"unknown operation: {Operation}");
             }
 
             try
             {
-                var dlhs = Double.Parse(lhs);
-                var drhs = Double.Parse(rhs);
+                var dlhs = double.Parse(lhs);
+                var drhs = double.Parse(rhs);
                 return builder(dlhs, drhs);
             }
             catch (FormatException e)
@@ -59,5 +80,7 @@ namespace calculator.Operation
                 throw new ArgumentException($"invalid number: {e.Message}", e);
             }
         }
+
+        public override string ToString() => $"{lhs} {Operation} {rhs}";
     }
 }
