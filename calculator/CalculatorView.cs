@@ -14,7 +14,7 @@ namespace calculator
     {
         public class UserInteractionArgs : EventArgs
         {
-            public enum Kind { Op = 1, Num, Eq };
+            public enum Kind { Op = 1, Num, Eq, Clear, ClearAll, Bsp, Negate };
 
             public Kind Type { get; private set; }
             public string Value { get; private set; }
@@ -31,6 +31,11 @@ namespace calculator
         public string Output
         {
             set { output.Text = value; }
+        }
+
+        public string Operation
+        {
+            set { operation.Text = value; }
         }
 
         public CalculatorView()
@@ -51,6 +56,26 @@ namespace calculator
         private void btnNum_Click(object sender, EventArgs e)
         {
             OnUserInteraction(UserInteractionArgs.Kind.Num, sender as Button);
+        }
+
+        private void btnCE_Click(object sender, EventArgs e)
+        {
+            OnUserInteraction(UserInteractionArgs.Kind.ClearAll, sender as Button);
+        }
+
+        private void btnC_Click(object sender, EventArgs e)
+        {
+            OnUserInteraction(UserInteractionArgs.Kind.Clear, sender as Button);
+        }
+
+        private void btnBsp_Click(object sender, EventArgs e)
+        {
+            OnUserInteraction(UserInteractionArgs.Kind.Bsp, sender as Button);
+        }
+  
+        private void btnNeg_Click(object sender, EventArgs e)
+        {
+            OnUserInteraction(UserInteractionArgs.Kind.Negate, sender as Button);
         }
 
         private void CalculatorView_KeyPress(object sender, KeyPressEventArgs e)

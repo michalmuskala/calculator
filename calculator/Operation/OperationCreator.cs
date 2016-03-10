@@ -16,6 +16,32 @@ namespace calculator.Operation
         public bool HasContent => !string.IsNullOrWhiteSpace(ToString());
         public bool IsValid => !new [] { Operation, lhs, rhs }.Any(string.IsNullOrEmpty);
 
+        private bool hasOperation => !string.IsNullOrEmpty(Operation);
+
+        public string Display()
+        {
+            if (hasOperation)
+            {
+                return $"{lhs} {Operation}";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string Current()
+        {
+            if (hasOperation)
+            {
+                return rhs;
+            }
+            else
+            {
+                return lhs;
+            }
+        }
+
         private delegate IOperation BuildOperation(double lhs, double rhs);
         private Dictionary<string, BuildOperation> operations;
 
@@ -34,18 +60,23 @@ namespace calculator.Operation
 
         public void Append(string s)
         {
-            if(String.IsNullOrEmpty(Operation))
+            if(hasOperation)
             {
-                lhs = Append(lhs, s);
+                rhs = Append(rhs, s);
             }
             else
             {
-                rhs = Append(rhs, s);
+                lhs = Append(lhs, s);
             }
         }
 
         private string Append(string original, string s)
         {
+            if (original.Length >= 12)
+            {
+                return original;
+            }
+
             if (s == "." && original.Contains("."))
             {
                 return original;
@@ -53,6 +84,67 @@ namespace calculator.Operation
             else
             {
                 return original + s;
+            }
+        }
+
+        public void Clear()
+        {
+            if (hasOperation)
+            {
+                rhs = "";
+            }
+            else
+            {
+                lhs = "";
+            }
+        }
+
+        public void Bsp()
+        {
+            if (hasOperation)
+            {
+                rhs = RemoveLast(rhs);
+            }
+            else
+            {
+                lhs = RemoveLast(lhs);
+            }
+        }
+
+        private string RemoveLast(string value)
+        {
+            if (value.Length > 0)
+            {
+                return value.Remove(value.Length - 1);
+            }
+            return value;
+        }
+
+        public void Negate()
+        {
+            if (hasOperation)
+            {
+                rhs = DoNegate(rhs);
+            }
+            else
+            {
+                lhs = DoNegate(lhs);
+            }
+        }
+
+        private string DoNegate(string value)
+        {
+            if (value.StartsWith("-"))
+            {
+                return value.Remove(0, 1);
+            }
+            else if (value.Length == 0)
+            {
+                return value;
+            }
+            else
+            {
+                return "-" + value;
             }
         }
 

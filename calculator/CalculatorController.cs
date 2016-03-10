@@ -23,7 +23,8 @@ namespace calculator
                     view.UserInteraction -= handler;
                 }
                 view = value;
-                view.UserInteraction += handler; 
+                view.UserInteraction += handler;
+                Refresh();
             }
         }
 
@@ -46,8 +47,26 @@ namespace calculator
                 case CalculatorView.UserInteractionArgs.Kind.Op:
                     model.Operation = args.Value;
                     break;
+                case CalculatorView.UserInteractionArgs.Kind.ClearAll:
+                    model.ClearAll();
+                    break;
+                case CalculatorView.UserInteractionArgs.Kind.Clear:
+                    model.Clear();
+                    break;
+                case CalculatorView.UserInteractionArgs.Kind.Bsp:
+                    model.Bsp();
+                    break;
+                case CalculatorView.UserInteractionArgs.Kind.Negate:
+                    model.Negate();
+                    break;
             }
-            view.Output = model.Display();
+            Refresh();
+        }
+
+        private void Refresh()
+        {
+            view.Operation = model.Display();
+            view.Output = model.Current();
         }
     }
 }

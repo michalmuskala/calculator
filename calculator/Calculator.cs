@@ -46,16 +46,23 @@ namespace calculator
             try
             {
                 operations.Add(creator.Create());
-                creator = new OperationCreator();
                 error = "";
             }
             catch (ArgumentException e)
             {
                 error = e.Message;
             }
+            creator = new OperationCreator();
         }
 
-        public string Display()
+        public void ClearAll() => creator = new OperationCreator();
+        public void Clear()    => creator.Clear();
+        public void Bsp()      => creator.Bsp();
+        public void Negate()   => creator.Negate();
+
+        public string Display() => creator.Display();
+
+        public string Current()
         {
             if (hasError)
             {
@@ -63,7 +70,7 @@ namespace calculator
             }
             else if (creator.HasContent || !operations.Any())
             {
-                return creator.ToString();
+                return creator.Current();
             }
             else
             {
@@ -78,7 +85,7 @@ namespace calculator
                 if (operations.Any())
                 {
                     var provider = System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.NumberFormat;
-                    return operations.Last().Value.ToString(provider);
+                    return operations.Last().Value.ToString("G10", provider);
                 }
                 else
                 {
